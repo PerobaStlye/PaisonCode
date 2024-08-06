@@ -8,65 +8,63 @@ public class MovimentoPersonagem : MonoBehaviour
     public bool andandoY;
     public bool andando;
 
-        public GameObject tela; // Referência ao objeto da tela
-    private bool telaAtiva = false; // Indica se a tela está ativa
+    private bool isPushing = false; // Indica se o personagem está empurrando um objeto
+    public float pushCooldown = 1.0f; // Tempo necessário para completar um empurrão
+    private float lastPushTime = 0f; // Tempo da última vez que o personagem iniciou um empurrão
+
+    public LayerMask pushableLayerMask; // LayerMask para objetos empurráveis
+
     private void Start()
     {
         anim = GetComponent<Animator>();
     }
 
-
     void Update()
     {
-        // Verifica se a tela está ativa e retorna se estiver
-        if (telaAtiva)
+        if (isPushing && Time.time - lastPushTime < pushCooldown)
         {
-            // Você pode adicionar lógica adicional aqui se desejar
-            // Verifica se a tecla "Esc" foi pressionada e desativa a tela se necessário
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                AtivarDesativarTela();
-            }
-            return;
+            return; // Se está empurrando e o cooldown não terminou, retorna
         }
+
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
 
-        // Verifica a direção predominante
         if (Mathf.Abs(horizontalInput) > Mathf.Abs(verticalInput))
         {
-            // Se a entrada horizontal for mais significativa, limita a vertical
             verticalInput = 0f;
         }
         else
         {
-            // Se a entrada vertical for mais significativa, limita a horizontal
             horizontalInput = 0f;
         }
 
-        // Configurações de animação
         anim.SetBool("EmMovimento", horizontalInput != 0 || verticalInput != 0);
         anim.SetBool("EmMovimentoX", horizontalInput != 0);
         anim.SetBool("EmMovimentoY", verticalInput != 0);
-        if (Input.GetKey(KeyCode.A) && andando == false)
+
+        if (Input.GetKey(KeyCode.A) && !andando)
         {
             anim.SetFloat("MovimentoX", -1);
             andando = true;
+            TryPushObject(Vector2.left);
         }
-        if (Input.GetKey(KeyCode.S) && andando == false)
+        if (Input.GetKey(KeyCode.S) && !andando)
         {
             anim.SetFloat("MovimentoY", -1);
             andando = true;
+            TryPushObject(Vector2.down);
         }
-        if (Input.GetKey(KeyCode.D) && andando == false)
+        if (Input.GetKey(KeyCode.D) && !andando)
         {
             anim.SetFloat("MovimentoX", 1);
             andando = true;
+            TryPushObject(Vector2.right);
         }
-        if (Input.GetKey(KeyCode.W) && andando == false)
+        if (Input.GetKey(KeyCode.W) && !andando)
         {
             anim.SetFloat("MovimentoY", 1);
             andando = true;
+            TryPushObject(Vector2.up);
         }
 
         if (Input.GetKeyUp(KeyCode.A))
@@ -90,53 +88,80 @@ public class MovimentoPersonagem : MonoBehaviour
             andando = false;
         }
 
-        if (Input.GetKeyDown(KeyCode.J) && !telaAtiva)
-        {
-            AtivarDesativarTela();
-        }
-
-        // Calcular a direção e normalizar
         Vector2 direction = new Vector2(horizontalInput, verticalInput).normalized;
-
-        // Mover o jogador
         Move(direction);
     }
 
     void Move(Vector2 direction)
     {
-        // Calcular o vetor de movimento
         Vector2 movement = direction * velocidade * Time.deltaTime;
-
-        // Mover o jogador
         transform.Translate(movement);
     }
-    private void OnTriggerEnter2D(Collider2D other)
+
+    void TryPushObject(Vector2 direction)
     {
-        if (other.CompareTag("Porta"))
+        Vector2 origin = (Vector2)transform.position + direction * 0.5f;
+        RaycastHit2D hit = Physics2D.Raycast(origin, direction, 1f, pushableLayerMask);
+
+        Debug.DrawRay(origin, direction * 1f, Color.red, 2f);
+
+        if (hit.collider != null)
         {
-            // Aqui você pode adicionar a lógica para ativar a tela quando entra em contato com a porta
-            AtivarDesativarTela();
+            Debug.Log("Raycast hit: " + hit.collider.name);
+            if (hit.collider.CompareTag("Empurravel"))
+            {
+                ObjetoEmpurravel objEmpurravel = hit.collider.GetComponent<ObjetoEmpurravel>();
+                if (objEmpurravel != null && objEmpurravel.CanBePushed)
+                {
+                    // Verifique se o objeto pode se mover sem colidir com outros objetos
+                    if (CanMoveObject(hit.collider.gameObject, direction))
+                    {
+                        isPushing = true;
+                        lastPushTime = Time.time;
+                        Vector2 targetPosition = (Vector2)hit.collider.transform.position + direction;
+                        StartCoroutine(PushObject(hit.collider.gameObject, targetPosition));
+                    }
+                }
+            }
+        }
+        else
+        {
+            Debug.Log("Raycast did not hit anything.");
         }
     }
-    public void AtivarDesativarTela()
+
+    bool CanMoveObject(GameObject obj, Vector2 direction)
     {
-        telaAtiva = !telaAtiva;
+        // Cria um pequeno teste de colisão na nova posição para verificar se o objeto pode se mover
+        Vector2 currentPosition = obj.transform.position;
+        Vector2 newPosition = currentPosition + direction;
 
-        // Adicione mensagens de depuração
-        Debug.Log("Tela Ativada: " + telaAtiva);
-
-        // Ativa ou desativa o objeto da tela
-        tela.SetActive(telaAtiva);
-
-        // Se a tela foi ativada, pare as animações do personagem
-        if (telaAtiva)
+        // Cria um colisor temporário para verificar a colisão
+        Collider2D collider = obj.GetComponent<Collider2D>();
+        if (collider == null)
         {
-            anim.SetBool("EmMovimento", false);
-            anim.SetBool("EmMovimentoX", false);
-            anim.SetBool("EmMovimentoY", false);
-            anim.SetFloat("MovimentoX", 0);
-            anim.SetFloat("MovimentoY", 0);
-            andando = false;
+            Debug.LogWarning("Collider2D not found on " + obj.name);
+            return false;
         }
+
+        // Teste de colisão com a nova posição
+        return !Physics2D.OverlapBox(newPosition, collider.bounds.size, 0f, LayerMask.GetMask("Default"));
+    }
+
+    System.Collections.IEnumerator PushObject(GameObject obj, Vector2 targetPosition)
+    {
+        float elapsedTime = 0f;
+        Vector2 startPosition = obj.transform.position;
+
+        while (elapsedTime < pushCooldown)
+        {
+            // Move o objeto gradualmente
+            obj.transform.position = Vector2.Lerp(startPosition, targetPosition, (elapsedTime / pushCooldown));
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        obj.transform.position = targetPosition;
+        isPushing = false;
     }
 }
