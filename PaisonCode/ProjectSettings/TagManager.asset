@@ -12,6 +12,7 @@ TagManager:
   - correta2
   - correta3
   - Empurravel
+  - Subivel
   layers:
   - Default
   - TransparentFX
@@ -22,7 +23,7 @@ TagManager:
   - player
   - ObjetoMover
   - objeto movido
-  - 
+  - Subivel
   - 
   - 
   - 
