@@ -1,14 +1,15 @@
 using UnityEngine;
+using System.Collections;
 
 public class PlayerPositionManager : MonoBehaviour
 {
     private Vector2 savedPosition;
     private bool isSaved = false;
     private bool isPaused = false;
+    public MovimentoPersonagem playerScript; // Referência ao script MovimentoPersonagem
 
     void Start()
     {
-        // Garante que o PlayerPositionManager seja reseta ao iniciar o jogo
         Reset();
     }
 
@@ -16,25 +17,59 @@ public class PlayerPositionManager : MonoBehaviour
     {
         savedPosition = position;
         isSaved = true;
-        PauseTime(); // Pausa o tempo quando a posição é salva
+        PauseTime();
+        Debug.Log("Posição inicial salva: " + savedPosition);
     }
 
     public void RestorePosition()
     {
         if (isSaved)
         {
-            // Restaura a posição salva
-            FindObjectOfType<MovimentoPersonagem>().transform.position = savedPosition;
-            isSaved = false;
-            ResumeTime(); // Retoma o tempo quando a posição é restaurada
+            StartCoroutine(RestoreAfterDelay());
         }
+    }
+
+    private IEnumerator RestoreAfterDelay()
+    {
+        Debug.Log("Iniciando contagem de 3 segundos...");
+        yield return new WaitForSecondsRealtime(3); // Aguarda 3 segundos antes de restaurar
+
+        Transform beforeDeathTransform = FindObjectWithTag("AntesDaMorte");
+        if (beforeDeathTransform != null)
+        {
+            Vector2 targetPosition = beforeDeathTransform.position;
+            Debug.Log("Restaurando a posição do jogador para: " + targetPosition);
+
+            if (playerScript.GetComponent<Rigidbody2D>() != null)
+            {
+                // Se o personagem tem um Rigidbody2D, usa MovePosition
+                playerScript.GetComponent<Rigidbody2D>().MovePosition(targetPosition);
+            }
+            else
+            {
+                playerScript.transform.position = targetPosition;
+            }
+            isSaved = false;
+            ResumeTime();
+        }
+        else
+        {
+            Debug.LogWarning("Objeto com a tag 'AntesDaMorte' não encontrado!");
+        }
+    }
+
+    private Transform FindObjectWithTag(string tag)
+    {
+        // Encontra o primeiro objeto com a tag especificada
+        GameObject obj = GameObject.FindGameObjectWithTag(tag);
+        return obj != null ? obj.transform : null;
     }
 
     private void PauseTime()
     {
         if (!isPaused)
         {
-            Time.timeScale = 0; // Pausa o tempo
+            Time.timeScale = 0;
             isPaused = true;
         }
     }
@@ -43,14 +78,13 @@ public class PlayerPositionManager : MonoBehaviour
     {
         if (isPaused)
         {
-            Time.timeScale = 1; // Retoma o tempo
+            Time.timeScale = 1;
             isPaused = false;
         }
     }
 
     void Reset()
     {
-        // Garante que o tempo seja retomado quando o jogo for fechado e reiniciado
         Time.timeScale = 1;
         isPaused = false;
         isSaved = false;
@@ -59,5 +93,14 @@ public class PlayerPositionManager : MonoBehaviour
     private void OnApplicationQuit()
     {
         Reset();
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("AntesDaMorte") && playerScript.isDead)
+        {
+            playerScript.isDead = false; // Permite o movimento novamente
+            RestorePosition(); // Restaura a posição após 3 segundos
+        }
     }
 }

@@ -15,7 +15,7 @@ public class ScriptArvores : MonoBehaviour
     void AdjustSortingOrder()
     {
         // Ajusta a ordem de renderização com base na posição Y
-        spriteRenderer.sortingOrder = Mathf.RoundToInt(-transform.position.y * 100);
+        spriteRenderer.sortingOrder = Mathf.RoundToInt(( +100 -transform.position.y) +1 );
     }
 
     void Update()

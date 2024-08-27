@@ -1,26 +1,29 @@
 using UnityEngine;
+using System.Collections;
 
 public class MovimentoPersonagem : MonoBehaviour
 {
-    public float velocidade = 5.0f; // Velocidade de movimento do personagem.
-    public float alturaSubida = 1.0f; // Altura para ajuste quando descer
-    private Animator anim; // Referência ao componente Animator.
+    public float velocidade = 5.0f;
+    public float alturaSubida = 1.0f;
+    private Animator anim;
     public bool andandoX;
     public bool andandoY;
     public bool andando;
 
-    private bool isPushing = false; // Indica se o personagem está empurrando um objeto
-    public float pushCooldown = 1.0f; // Tempo necessário para completar um empurrão
-    private float lastPushTime = 0f; // Tempo da última vez que o personagem iniciou um empurrão
+    private bool isPushing = false;
+    public float pushCooldown = 1.0f;
+    private float lastPushTime = 0f;
+    public LayerMask pushableLayerMask;
+    public LayerMask climbableLayerMask;
 
-    public LayerMask pushableLayerMask; // LayerMask para objetos empurráveis
-    public LayerMask climbableLayerMask; // LayerMask para objetos escaláveis
+    private bool isClimbing = false;
+    private Vector2 posicaoInicial;
+    private Transform localDeSubida;
 
-    private bool isClimbing = false; // Indica se o personagem está escalando
-    private Vector2 posicaoInicial; // Posição inicial do personagem
-    private Transform localDeSubida; // Referência ao objeto LocalDeSubida
+    public bool isDead = false; // Variável que indica se o personagem está morto
+    private Vector2 lastAntesDaMortePosition; // Última posição do objeto AntesDaMorte que o personagem passou
 
-    private void Start()
+    void Start()
     {
         anim = GetComponent<Animator>();
     }
@@ -29,87 +32,16 @@ public class MovimentoPersonagem : MonoBehaviour
     {
         if (isClimbing)
         {
-            // Verifica a entrada de descida e desce conforme o ponto selecionado
             if (Input.GetKeyDown(KeyCode.J))
             {
                 DescendObject();
             }
-            return; // Se está escalando, não permite outras ações
+            return;
         }
 
-        // Só permite movimentar se não estiver empurrando um objeto
         if (!isPushing)
         {
-            float horizontalInput = Input.GetAxis("Horizontal");
-            float verticalInput = Input.GetAxis("Vertical");
-
-            if (Mathf.Abs(horizontalInput) > Mathf.Abs(verticalInput))
-            {
-                verticalInput = 0f;
-            }
-            else
-            {
-                horizontalInput = 0f;
-            }
-
-            anim.SetBool("EmMovimento", horizontalInput != 0 || verticalInput != 0);
-            anim.SetBool("EmMovimentoX", horizontalInput != 0);
-            anim.SetBool("EmMovimentoY", verticalInput != 0);
-
-            if (velocidade > 0)
-            {
-                if (Input.GetKey(KeyCode.A) && !andando)
-                {
-                    anim.SetFloat("MovimentoX", -1);
-                    andando = true;
-                    TryPushObject(Vector2.left);
-                }
-                if (Input.GetKey(KeyCode.S) && !andando)
-                {
-                    anim.SetFloat("MovimentoY", -1);
-                    andando = true;
-                    TryPushObject(Vector2.down);
-                }
-                if (Input.GetKey(KeyCode.D) && !andando)
-                {
-                    anim.SetFloat("MovimentoX", 1);
-                    andando = true;
-                    TryPushObject(Vector2.right);
-                }
-                if (Input.GetKey(KeyCode.W) && !andando)
-                {
-                    anim.SetFloat("MovimentoY", 1);
-                    andando = true;
-                    TryPushObject(Vector2.up);
-                }
-
-                if (Input.GetKeyUp(KeyCode.A))
-                {
-                    anim.SetFloat("MovimentoX", 0);
-                    andando = false;
-                }
-                if (Input.GetKeyUp(KeyCode.S))
-                {
-                    anim.SetFloat("MovimentoY", 0);
-                    andando = false;
-                }
-                if (Input.GetKeyUp(KeyCode.D))
-                {
-                    anim.SetFloat("MovimentoX", 0);
-                    andando = false;
-                }
-                if (Input.GetKeyUp(KeyCode.W))
-                {
-                    anim.SetFloat("MovimentoY", 0);
-                    andando = false;
-                }
-            }
-
-            Vector2 direction = new Vector2(horizontalInput, verticalInput).normalized;
-            if (velocidade > 0) // Só se move se a velocidade for maior que 0
-            {
-                Move(direction);
-            }
+            HandleMovement();
         }
 
         if (Input.GetKeyDown(KeyCode.J))
@@ -118,6 +50,80 @@ public class MovimentoPersonagem : MonoBehaviour
             {
                 TryClimbObject();
             }
+        }
+    }
+
+    void HandleMovement()
+    {
+        float horizontalInput = Input.GetAxis("Horizontal");
+        float verticalInput = Input.GetAxis("Vertical");
+
+        if (Mathf.Abs(horizontalInput) > Mathf.Abs(verticalInput))
+        {
+            verticalInput = 0f;
+        }
+        else
+        {
+            horizontalInput = 0f;
+        }
+
+        anim.SetBool("EmMovimento", horizontalInput != 0 || verticalInput != 0);
+        anim.SetBool("EmMovimentoX", horizontalInput != 0);
+        anim.SetBool("EmMovimentoY", verticalInput != 0);
+
+        if (velocidade > 0)
+        {
+            if (Input.GetKey(KeyCode.A) && !andando && !isDead)
+            {
+                anim.SetFloat("MovimentoX", -1);
+                andando = true;
+                TryPushObject(Vector2.left);
+            }
+            if (Input.GetKey(KeyCode.S) && !andando && !isDead)
+            {
+                anim.SetFloat("MovimentoY", -1);
+                andando = true;
+                TryPushObject(Vector2.down);
+            }
+            if (Input.GetKey(KeyCode.D) && !andando && !isDead)
+            {
+                anim.SetFloat("MovimentoX", 1);
+                andando = true;
+                TryPushObject(Vector2.right);
+            }
+            if (Input.GetKey(KeyCode.W) && !andando && !isDead)
+            {
+                anim.SetFloat("MovimentoY", 1);
+                andando = true;
+                TryPushObject(Vector2.up);
+            }
+
+            if (Input.GetKeyUp(KeyCode.A) && !isDead)
+            {
+                anim.SetFloat("MovimentoX", 0);
+                andando = false;
+            }
+            if (Input.GetKeyUp(KeyCode.S) && !isDead)
+            {
+                anim.SetFloat("MovimentoY", 0);
+                andando = false;
+            }
+            if (Input.GetKeyUp(KeyCode.D) && !isDead)
+            {
+                anim.SetFloat("MovimentoX", 0);
+                andando = false;
+            }
+            if (Input.GetKeyUp(KeyCode.W) && !isDead)
+            {
+                anim.SetFloat("MovimentoY", 0);
+                andando = false;
+            }
+        }
+
+        Vector2 direction = new Vector2(horizontalInput, verticalInput).normalized;
+        if (velocidade > 0)
+        {
+            Move(direction);
         }
     }
 
@@ -142,7 +148,6 @@ public class MovimentoPersonagem : MonoBehaviour
                 ObjetoEmpurravel objEmpurravel = hit.collider.GetComponent<ObjetoEmpurravel>();
                 if (objEmpurravel != null && objEmpurravel.CanBePushed)
                 {
-                    // Verifique se o objeto pode se mover sem colidir com outros objetos
                     if (CanMoveObject(hit.collider.gameObject, direction))
                     {
                         isPushing = true;
@@ -161,11 +166,9 @@ public class MovimentoPersonagem : MonoBehaviour
 
     bool CanMoveObject(GameObject obj, Vector2 direction)
     {
-        // Cria um pequeno teste de colisão na nova posição para verificar se o objeto pode se mover
         Vector2 currentPosition = obj.transform.position;
         Vector2 newPosition = currentPosition + direction;
 
-        // Cria um colisor temporário para verificar a colisão
         Collider2D collider = obj.GetComponent<Collider2D>();
         if (collider == null)
         {
@@ -173,18 +176,16 @@ public class MovimentoPersonagem : MonoBehaviour
             return false;
         }
 
-        // Teste de colisão com a nova posição
         return !Physics2D.OverlapBox(newPosition, collider.bounds.size, 0f, LayerMask.GetMask("Default"));
     }
 
-    System.Collections.IEnumerator PushObject(GameObject obj, Vector2 targetPosition)
+    IEnumerator PushObject(GameObject obj, Vector2 targetPosition)
     {
         float elapsedTime = 0f;
         Vector2 startPosition = obj.transform.position;
 
         while (elapsedTime < pushCooldown)
         {
-            // Move o objeto gradualmente
             obj.transform.position = Vector2.Lerp(startPosition, targetPosition, (elapsedTime / pushCooldown));
             elapsedTime += Time.deltaTime;
             yield return null;
@@ -208,24 +209,20 @@ public class MovimentoPersonagem : MonoBehaviour
     void ClimbObject(GameObject climbable)
     {
         isClimbing = true;
-        anim.SetBool("Subindo", true); // Define a variável de animação
-        // Salva a posição inicial antes de subir
+        anim.SetBool("Subindo", true);
         posicaoInicial = transform.position;
-        // Encontra o objeto LocalDeSubida
         Transform localDeSubidaTransform = climbable.transform.Find("LocalDeSubida");
         if (localDeSubidaTransform != null)
         {
             localDeSubida = localDeSubidaTransform;
-            // Move o personagem para o LocalDeSubida
             transform.position = localDeSubida.position;
         }
         else
         {
             Debug.LogError("LocalDeSubida não encontrado no objeto escalável.");
         }
-        // Desativa a gravidade e outros movimentos
         GetComponent<Rigidbody2D>().isKinematic = true;
-        velocidade = 0; // Desativa o movimento enquanto estiver escalando
+        velocidade = 0;
     }
 
     void DescendObject()
@@ -233,14 +230,45 @@ public class MovimentoPersonagem : MonoBehaviour
         if (localDeSubida != null)
         {
             isClimbing = false;
-            anim.SetBool("Subindo", false); // Define a variável de animação
-            // Move o personagem para a posição abaixo do LocalDeSubida
+            anim.SetBool("Subindo", false);
             Vector2 descendPosition = posicaoInicial;
             transform.position = new Vector2(descendPosition.x, localDeSubida.position.y - alturaSubida);
-            // Ativa a gravidade e outros movimentos
             GetComponent<Rigidbody2D>().isKinematic = false;
-            velocidade = 5.0f; // Restaura a velocidade original
-            localDeSubida = null; // Limpa a referência
+            velocidade = 5.0f;
+            localDeSubida = null;
         }
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Queda"))
+        {
+            isDead = true;
+            velocidade = 0;
+            
+            // Salva a posição atual no caso de retorno
+            StartCoroutine(ReturnToLastAntesDaMortePosition());
+        }
+        else if (other.CompareTag("AntesDaMorte"))
+        {
+            // Atualiza a posição do último "AntesDaMorte" que o personagem passou
+            lastAntesDaMortePosition = other.transform.position;
+        }
+    }
+
+    private IEnumerator ReturnToLastAntesDaMortePosition()
+    {
+        // Aguarda 3 segundos
+        yield return new WaitForSecondsRealtime(3);
+
+        // Volta para a última posição de AntesDaMorte
+        if (lastAntesDaMortePosition != Vector2.zero)
+        {
+            transform.position = lastAntesDaMortePosition;
+            lastAntesDaMortePosition = Vector2.zero; // Limpa a posição após o retorno
+        }
+
+        isDead = false; // Permite o movimento novamente
+        velocidade = 5;
     }
 }
