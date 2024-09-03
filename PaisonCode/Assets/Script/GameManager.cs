@@ -64,4 +64,13 @@ public class GameManager : MonoBehaviour
     {
         OnPlaySound?.Invoke(clip);
     }
+    public static Action<Vector2> OnPlayerPositionChanged;
+
+    public void UpdatePlayerPosition(Vector2 novaPosicao)
+    {
+        personagemPosicao = novaPosicao;
+        OnPlayerPositionChanged?.Invoke(novaPosicao);
+        SavePlayerData(); // Opcional: salvar a posição
+    }
+
 }

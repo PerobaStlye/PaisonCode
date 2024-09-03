@@ -252,7 +252,7 @@ public class MovimentoPersonagem : MonoBehaviour
         {
             isDead = true;
             velocidade = 0;
-
+            
             // Aciona o evento para criar partículas
             GameManager.Instance.TriggerParticles(transform.position);
 
@@ -276,5 +276,13 @@ public class MovimentoPersonagem : MonoBehaviour
 
         isDead = false; // Permite o movimento novamente
         velocidade = 5;
+    }
+    void MoveCharacter(Vector2 direction)
+    {
+        Vector2 movement = direction * velocidade * Time.deltaTime;
+        transform.Translate(movement);
+
+        // Aqui você pode adicionar outras lógicas que sejam relevantes para o novo método.
+        GameManager.Instance.UpdatePlayerPosition(transform.position);
     }
 }
