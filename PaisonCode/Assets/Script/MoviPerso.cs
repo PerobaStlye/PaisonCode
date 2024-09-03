@@ -23,6 +23,8 @@ public class MovimentoPersonagem : MonoBehaviour
     public bool isDead = false; // Variável que indica se o personagem está morto
     private Vector2 lastAntesDaMortePosition; // Última posição do objeto AntesDaMorte que o personagem passou
 
+    public AudioClip pushSoundClip; // Clip de som para empurrar
+
     void Start()
     {
         anim = GetComponent<Animator>();
@@ -142,7 +144,6 @@ public class MovimentoPersonagem : MonoBehaviour
 
         if (hit.collider != null)
         {
-            Debug.Log("Raycast hit: " + hit.collider.name);
             if (hit.collider.CompareTag("Empurravel"))
             {
                 ObjetoEmpurravel objEmpurravel = hit.collider.GetComponent<ObjetoEmpurravel>();
@@ -154,6 +155,9 @@ public class MovimentoPersonagem : MonoBehaviour
                         lastPushTime = Time.time;
                         Vector2 targetPosition = (Vector2)hit.collider.transform.position + direction;
                         StartCoroutine(PushObject(hit.collider.gameObject, targetPosition));
+
+                        // Toca o som ao empurrar
+                        GameManager.Instance.PlaySound(pushSoundClip);
                     }
                 }
             }
@@ -236,6 +240,9 @@ public class MovimentoPersonagem : MonoBehaviour
             GetComponent<Rigidbody2D>().isKinematic = false;
             velocidade = 5.0f;
             localDeSubida = null;
+
+            // Exemplo de troca de tela
+            GameManager.Instance.ChangeScreen("NewScreen");
         }
     }
 
@@ -245,23 +252,22 @@ public class MovimentoPersonagem : MonoBehaviour
         {
             isDead = true;
             velocidade = 0;
-            
-            // Salva a posição atual no caso de retorno
+
+            // Aciona o evento para criar partículas
+            GameManager.Instance.TriggerParticles(transform.position);
+
             StartCoroutine(ReturnToLastAntesDaMortePosition());
         }
         else if (other.CompareTag("AntesDaMorte"))
         {
-            // Atualiza a posição do último "AntesDaMorte" que o personagem passou
             lastAntesDaMortePosition = other.transform.position;
         }
     }
 
     private IEnumerator ReturnToLastAntesDaMortePosition()
     {
-        // Aguarda 3 segundos
         yield return new WaitForSecondsRealtime(3);
 
-        // Volta para a última posição de AntesDaMorte
         if (lastAntesDaMortePosition != Vector2.zero)
         {
             transform.position = lastAntesDaMortePosition;

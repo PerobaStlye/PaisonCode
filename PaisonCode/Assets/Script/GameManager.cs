@@ -1,4 +1,6 @@
 using UnityEngine;
+using System.Collections;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -10,84 +12,56 @@ public class GameManager : MonoBehaviour
     public int outrosItens;
     public bool jogadorEstaSubindo;
 
+    public static Action<Vector2> OnTriggerParticles;
+    public static Action<string> OnScreenChange;
+    public static Action<AudioClip> OnPlaySound;
+
     private void Awake()
     {
-        // Garante que haja apenas uma instância do GameManager
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); // Não destrói o GameManager ao trocar de cena
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
-            Destroy(gameObject); // Remove o GameManager duplicado
+            Destroy(gameObject);
         }
     }
 
-    private void Start()
+    public void SavePlayerData()
     {
-        // Inicia a corrotina para mostrar a posição do jogador
-        if (player != null)
-        {
-            StartCoroutine(MostrarPosicaoJogador());
-        }
-        else
-        {
-            Debug.LogWarning("Referência ao player não foi atribuída no GameManager.");
-        }
+        PlayerPrefs.SetFloat("PosicaoX", player.transform.position.x);
+        PlayerPrefs.SetFloat("PosicaoY", player.transform.position.y);
+        PlayerPrefs.SetInt("Moedas", moedasColetadas);
+        PlayerPrefs.SetInt("OutrosItens", outrosItens);
+        PlayerPrefs.SetInt("Subindo", jogadorEstaSubindo ? 1 : 0);
+        PlayerPrefs.Save();
     }
 
-    private void Update()
+    public void LoadPlayerData()
     {
-        if (player != null)
-        {
-            // Atualiza a posição do personagem no GameManager
-            personagemPosicao = player.transform.position;
-        }
+        float x = PlayerPrefs.GetFloat("PosicaoX", 0);
+        float y = PlayerPrefs.GetFloat("PosicaoY", 0);
+        moedasColetadas = PlayerPrefs.GetInt("Moedas", 0);
+        outrosItens = PlayerPrefs.GetInt("OutrosItens", 0);
+        jogadorEstaSubindo = PlayerPrefs.GetInt("Subindo", 0) == 1;
+
+        player.transform.position = new Vector2(x, y);
     }
 
-    private System.Collections.IEnumerator MostrarPosicaoJogador()
+    public void TriggerParticles(Vector2 position)
     {
-        while (true)
-        {
-            if (player != null)
-            {
-                // Atualiza a posição do personagem e exibe no console
-                personagemPosicao = player.transform.position;
-                Debug.Log("Posição do Jogador: " + personagemPosicao);
-            }
-            yield return new WaitForSeconds(1f); // Espera 1 segundo
-        }
+        OnTriggerParticles?.Invoke(position);
     }
 
-    // Métodos para manipular variáveis e dados
-    public void AtualizarPosicaoPersonagem(Vector2 novaPosicao)
+    public void ChangeScreen(string screenName)
     {
-        personagemPosicao = novaPosicao;
+        OnScreenChange?.Invoke(screenName);
     }
 
-    public void AdicionarMoedas(int quantidade)
+    public void PlaySound(AudioClip clip)
     {
-        moedasColetadas += quantidade;
-    }
-
-    public void AdicionarItens(int quantidade)
-    {
-        outrosItens += quantidade;
-    }
-
-    public void DefinirEstadoSubindo(bool estado)
-    {
-        jogadorEstaSubindo = estado;
-    }
-
-    public void SalvarDados()
-    {
-        // Implementar lógica de salvamento se necessário
-    }
-
-    public void CarregarDados()
-    {
-        // Implementar lógica de carregamento se necessário
+        OnPlaySound?.Invoke(clip);
     }
 }
