@@ -1343,6 +1343,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5425305832152724354, guid: 425b3f6225528af4b8da5da4469124b0, type: 3}
+      propertyPath: velocidade
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5425305832152724354, guid: 425b3f6225528af4b8da5da4469124b0, type: 3}
+      propertyPath: particlePrefab
+      value: 
+      objectReference: {fileID: 6400399549019697523, guid: c173e7eeb6ff32e4c880a069b6f00e46, type: 3}
+    - target: {fileID: 5425305832152724354, guid: 425b3f6225528af4b8da5da4469124b0, type: 3}
       propertyPath: pushableLayerMask.m_Bits
       value: 8
       objectReference: {fileID: 0}
@@ -1789,6 +1797,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameObject
       objectReference: {fileID: 0}
+    - target: {fileID: 5701458573333764959, guid: 66465f783181dd840934f90298962938, type: 3}
+      propertyPath: screenPrefabs.Array.data[1]
+      value: 
+      objectReference: {fileID: 2957333820724787717, guid: b6a6c983736412f449ce07e0269c4a4b, type: 3}
     - target: {fileID: 6604414664677119163, guid: 66465f783181dd840934f90298962938, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.28850687

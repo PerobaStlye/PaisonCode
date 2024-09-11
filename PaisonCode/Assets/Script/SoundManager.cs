@@ -1,31 +1,27 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class SoundManager : MonoBehaviour
 {
-    public AudioSource audioSource;
+
+    public static SoundManager instance;
+    public AudioSource audioSource, sfxSource;
+    public AudioClip clipEmpurrar, clipMoeda, clipMorte;
+
 
     private void Start()
     {
-        audioSource = GetComponent<AudioSource>();
+        GameManager.Instance.RegisterSoundListener(ReproduzirSom);
     }
 
-    private void OnEnable()
+    private void OnDestroy()
     {
-        GameManager.OnPlaySound += PlaySound;
+        GameManager.Instance.UnregisterSoundListener(ReproduzirSom);
     }
 
-    private void OnDisable()
+    private void ReproduzirSom(AudioClip clip)
     {
-        GameManager.OnPlaySound -= PlaySound;
+       
     }
 
-    private void PlaySound(AudioClip clip)
-    {
-        if (audioSource != null && clip != null)
-        {
-            audioSource.PlayOneShot(clip);
-        }
-    }
 }

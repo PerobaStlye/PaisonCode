@@ -65,6 +65,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioSource: {fileID: 0}
+  sfxSource: {fileID: 0}
+  clipEmpurrar: {fileID: 0}
+  clipMoeda: {fileID: 0}
+  clipMorte: {fileID: 0}
 --- !u!114 &5701458573333764959
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -77,6 +81,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aeea3e57752f486448faf27891e0a1b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  screenPrefabs:
+  - {fileID: 4042736655706357572, guid: 6c3a7c09ac289d64cb9f2eefac3aaf22, type: 3}
+  - {fileID: 2109563383309468634, guid: 874969c4cbbb61a4bbff39b568fbf248, type: 3}
 --- !u!114 &4578966993278252929
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -89,3 +96,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e913ba5d2b83b954692f1537c4ac18b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  particlePrefab: {fileID: 0}

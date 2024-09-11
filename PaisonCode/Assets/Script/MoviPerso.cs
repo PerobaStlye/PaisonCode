@@ -3,7 +3,7 @@ using System.Collections;
 
 public class MovimentoPersonagem : MonoBehaviour
 {
-    public float velocidade = 5.0f;
+    public float velocidade = 2.0f;
     public float alturaSubida = 1.0f;
     private Animator anim;
     public bool andandoX;
@@ -22,8 +22,11 @@ public class MovimentoPersonagem : MonoBehaviour
 
     public bool isDead = false; // Variável que indica se o personagem está morto
     private Vector2 lastAntesDaMortePosition; // Última posição do objeto AntesDaMorte que o personagem passou
+    bool telaAtivada = false;
+    public float intervaloTela;
 
     public AudioClip pushSoundClip; // Clip de som para empurrar
+    public GameObject particlePrefab; // Prefab de partículas
 
     void Start()
     {
@@ -46,12 +49,29 @@ public class MovimentoPersonagem : MonoBehaviour
             HandleMovement();
         }
 
-        if (Input.GetKeyDown(KeyCode.J))
+        if (Input.GetKeyDown(KeyCode.J) && !isClimbing)
         {
-            if (!isClimbing)
+            if (Physics2D.OverlapCircle(transform.position, 1f, climbableLayerMask) == null && telaAtivada == false)
+            {
+                // Altere o nome da tela para o nome do prefab que deseja ativar
+                GameManager.Instance.ChangeScreen("Canvas");
+                telaAtivada = true;
+                
+            }
+            if (intervaloTela >= 2f)
+            {
+                GameManager.Instance.DeactivateScreen("Canvas");
+                telaAtivada = false;
+                intervaloTela = 0;
+            }
+            else
             {
                 TryClimbObject();
             }
+        }
+        if (telaAtivada == true)
+        {
+            intervaloTela = intervaloTela + Time.deltaTime;
         }
     }
 
@@ -133,6 +153,7 @@ public class MovimentoPersonagem : MonoBehaviour
     {
         Vector2 movement = direction * velocidade * Time.deltaTime;
         transform.Translate(movement);
+        MoveCharacter(direction); // Atualiza a posição no GameManager
     }
 
     void TryPushObject(Vector2 direction)
@@ -228,7 +249,6 @@ public class MovimentoPersonagem : MonoBehaviour
         GetComponent<Rigidbody2D>().isKinematic = true;
         velocidade = 0;
     }
-
     void DescendObject()
     {
         if (localDeSubida != null)
@@ -238,11 +258,8 @@ public class MovimentoPersonagem : MonoBehaviour
             Vector2 descendPosition = posicaoInicial;
             transform.position = new Vector2(descendPosition.x, localDeSubida.position.y - alturaSubida);
             GetComponent<Rigidbody2D>().isKinematic = false;
-            velocidade = 5.0f;
+            velocidade = 2.0f;
             localDeSubida = null;
-
-            // Exemplo de troca de tela
-            GameManager.Instance.ChangeScreen("NewScreen");
         }
     }
 
@@ -252,9 +269,12 @@ public class MovimentoPersonagem : MonoBehaviour
         {
             isDead = true;
             velocidade = 0;
-            
+
             // Aciona o evento para criar partículas
-            GameManager.Instance.TriggerParticles(transform.position);
+            if (particlePrefab != null)
+            {
+                GameManager.Instance.TriggerParticles(transform.position, particlePrefab);
+            }
 
             StartCoroutine(ReturnToLastAntesDaMortePosition());
         }
@@ -275,14 +295,15 @@ public class MovimentoPersonagem : MonoBehaviour
         }
 
         isDead = false; // Permite o movimento novamente
-        velocidade = 5;
+        velocidade = 2;
     }
+
     void MoveCharacter(Vector2 direction)
     {
         Vector2 movement = direction * velocidade * Time.deltaTime;
         transform.Translate(movement);
 
-        // Aqui você pode adicionar outras lógicas que sejam relevantes para o novo método.
+        // Atualiza a posição do jogador no GameManager
         GameManager.Instance.UpdatePlayerPosition(transform.position);
     }
 }

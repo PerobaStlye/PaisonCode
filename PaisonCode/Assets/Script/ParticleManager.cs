@@ -2,20 +2,20 @@ using UnityEngine;
 
 public class ParticleManager : MonoBehaviour
 {
-    public GameObject particlePrefab; // Prefab das partículas
+    public GameObject particlePrefab;
 
-    private void OnEnable()
+    private void Start()
     {
-        GameManager.OnTriggerParticles += SpawnParticles;
+        GameManager.Instance.RegisterParticleListener(CriarParticulas);
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
-        GameManager.OnTriggerParticles -= SpawnParticles;
+        GameManager.Instance.UnregisterParticleListener(CriarParticulas);
     }
 
-    private void SpawnParticles(Vector2 position)
+    private void CriarParticulas(Vector2 position, GameObject prefab)
     {
-        Instantiate(particlePrefab, position, Quaternion.identity);
+        Instantiate(prefab, position, Quaternion.identity);
     }
 }
