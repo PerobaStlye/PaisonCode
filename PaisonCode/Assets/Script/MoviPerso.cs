@@ -27,10 +27,15 @@ public class MovimentoPersonagem : MonoBehaviour
 
     public AudioClip pushSoundClip; // Clip de som para empurrar
     public GameObject particlePrefab; // Prefab de partículas
+    public GameObject objetoParticulaPos;
 
     void Start()
     {
         anim = GetComponent<Animator>();
+        if (objetoParticulaPos == null)
+        {
+            Debug.LogError("Não colocaram instacia para a particula nascer");
+        }
     }
 
     void Update()
@@ -177,8 +182,9 @@ public class MovimentoPersonagem : MonoBehaviour
                         Vector2 targetPosition = (Vector2)hit.collider.transform.position + direction;
                         StartCoroutine(PushObject(hit.collider.gameObject, targetPosition));
 
-                        // Toca o som ao empurrar
-                        GameManager.Instance.PlaySound(pushSoundClip);
+                        // Toca o som de empurrar
+                        SoundManager.Instance.TocarSomDeEmpurrar();
+                        Debug.LogError("Empurrando");
                     }
                 }
             }
@@ -188,6 +194,7 @@ public class MovimentoPersonagem : MonoBehaviour
             Debug.Log("Raycast did not hit anything.");
         }
     }
+
 
     bool CanMoveObject(GameObject obj, Vector2 direction)
     {
@@ -273,7 +280,7 @@ public class MovimentoPersonagem : MonoBehaviour
             // Aciona o evento para criar partículas
             if (particlePrefab != null)
             {
-                GameManager.Instance.TriggerParticles(transform.position, particlePrefab);
+                GameManager.Instance.TriggerParticles(objetoParticulaPos.transform.position, particlePrefab);
             }
 
             StartCoroutine(ReturnToLastAntesDaMortePosition());

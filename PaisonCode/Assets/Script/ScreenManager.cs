@@ -7,6 +7,10 @@ public class ScreenManager : MonoBehaviour
 {
     public GameObject[] screenPrefabs; // Array de prefabs de tela para ativar/desativar
     private Dictionary<string, GameObject> screenInstances = new Dictionary<string, GameObject>();
+    private bool test = true;
+    int reiniciarTela;
+    int contadorPraTela;
+    int streak;
 
     private void Start()
     {
@@ -55,6 +59,18 @@ public class ScreenManager : MonoBehaviour
         if (screenInstances.TryGetValue(screenName, out GameObject screenToDeactivate))
         {
             screenToDeactivate.SetActive(false);
+        }
+    }
+
+    //////////////////////////////////////////////////TESTE///////////////////////////////////////////////////////////
+    private void Update()
+    {
+
+
+        if (test == true)
+        {
+            GameManager.Instance.ChangeScreen($"Puzzle1");
+            test = false;
         }
     }
 }

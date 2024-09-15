@@ -1,21 +1,60 @@
 using UnityEngine;
+using System;
+using System.Collections;
 
 public class ParticleManager : MonoBehaviour
 {
-    public GameObject particlePrefab;
+    public static ParticleManager Instance;
+    public GameObject rockPrefab; // Prefab da pedra
+    public GameObject spawnPoint; // Ponto de spawn das pedras
+    private float rockSpawnInterval;
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     private void Start()
     {
-        GameManager.Instance.RegisterParticleListener(CriarParticulas);
+        // Registra o método para lidar com o intervalo de spawn de pedras
+        GameManager.OnRockSpawnIntervalChanged += UpdateSpawnInterval;
+        StartCoroutine(SpawnRocks());
     }
 
     private void OnDestroy()
     {
-        GameManager.Instance.UnregisterParticleListener(CriarParticulas);
+        // Desregistra o método ao destruir o objeto
+        GameManager.OnRockSpawnIntervalChanged -= UpdateSpawnInterval;
     }
 
-    private void CriarParticulas(Vector2 position, GameObject prefab)
+    private void UpdateSpawnInterval(float interval)
     {
-        Instantiate(prefab, position, Quaternion.identity);
+        rockSpawnInterval = interval;
+    }
+
+    private IEnumerator SpawnRocks()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(rockSpawnInterval);
+            SpawnRock();
+        }
+    }
+
+    private void SpawnRock()
+    {
+        if (rockPrefab != null && spawnPoint != null)
+        {
+            // Spawna a pedra na posição centralizada do ponto de spawn
+            Vector2 spawnPosition = spawnPoint.transform.position;
+            Instantiate(rockPrefab, spawnPosition, Quaternion.identity);
+        }
     }
 }

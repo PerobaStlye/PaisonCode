@@ -6,57 +6,48 @@ public class MouseMover : MonoBehaviour
     private bool estaSendoArrastado = false;
     private bool foiColocado = false;
     private bool correta = false;
-    private Vector3 posicaoInicial;
     private Vector3 posicaoInicialCena;
     private float profundidadeOriginal;
+    private Collider2D triggerAtual;
 
     private void Start()
     {
         profundidadeOriginal = transform.position.z;
-        posicaoInicialCena = transform.position; // Salva a posição inicial no início da cena
+        posicaoInicialCena = transform.position;
     }
 
     private void Update()
     {
-        if (estaSendoArrastado && !foiColocado)
+        if (estaSendoArrastado)
         {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             mousePos.z = profundidadeOriginal;
-            transform.position = mousePos + posicaoInicial;
+            transform.position = mousePos;
         }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (!estaSendoArrastado && other.CompareTag(tagCorreta))
+        if (other.CompareTag(tagCorreta))
         {
-            if (!foiColocado)
-            {
-                // Obtém o centro do BoxCollider2D do outro objeto
-                BoxCollider2D boxCollider = other.GetComponent<BoxCollider2D>();
-                if (boxCollider != null)
-                {
-                    Vector3 centroDoCollider = other.transform.position + (Vector3)boxCollider.offset;
-                    transform.position = centroDoCollider;
-                }
-                else
-                {
-                    transform.position = other.transform.position;
-                }
-
-                if (gameObject.CompareTag("Movel") && other.CompareTag(tagCorreta))
-                {
-                    GetComponent<SpriteRenderer>().color = Color.green;
-                    foiColocado = true;
-                    correta = true;
-                }
-            }
+            triggerAtual = other;
         }
     }
 
     private void OnTriggerStay2D(Collider2D other)
     {
-        OnTriggerEnter2D(other);
+        if (other.CompareTag(tagCorreta))
+        {
+            triggerAtual = other;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other == triggerAtual)
+        {
+            triggerAtual = null;
+        }
     }
 
     private void OnMouseDown()
@@ -64,26 +55,60 @@ public class MouseMover : MonoBehaviour
         if (Input.GetMouseButtonDown(0) && !foiColocado && !correta)
         {
             estaSendoArrastado = true;
-            posicaoInicial = transform.position - Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            gameObject.GetComponent<Collider2D>().isTrigger = true; // Torna o collider um trigger enquanto arrasta
+            GetComponent<Collider2D>().isTrigger = true;
         }
     }
 
     private void OnMouseUp()
     {
-        if (estaSendoArrastado && !foiColocado && !correta)
-        {
-            Invoke("RetornarParaPosicaoInicial", 0.5f); // Chama o método RetornarParaPosicaoInicial após 0.5 segundos
-        }
         estaSendoArrastado = false;
-        gameObject.GetComponent<Collider2D>().isTrigger = false; // Volta o collider ao estado normal quando solta
-    }
+        GetComponent<Collider2D>().isTrigger = false;
 
-    private void RetornarParaPosicaoInicial()
-    {
         if (!foiColocado && !correta)
         {
-            transform.position = posicaoInicialCena; // Volta para a posição inicial da cena se não foi colocado corretamente
+            Invoke("ChecarPosicao", 0.2f);
+        }
+    }
+
+    private void ChecarPosicao()
+    {
+        if (triggerAtual != null && !foiColocado)
+        {
+            BoxCollider2D boxCollider = triggerAtual.GetComponent<BoxCollider2D>();
+            if (boxCollider != null)
+            {
+                Vector3 centroDoCollider = triggerAtual.transform.position + (Vector3)boxCollider.offset;
+                transform.position = centroDoCollider;
+            }
+            else
+            {
+                transform.position = triggerAtual.transform.position;
+            }
+
+            GetComponent<SpriteRenderer>().color = Color.green;
+            foiColocado = true;
+            correta = true;
+            PlayerPrefs.SetInt("PontuaçãoTelas", 1);
+            PlayerPrefs.Save();
+        }
+        else
+        {
+            ResetPosition(true);
+            GameObject.FindObjectOfType<ScriptTelas>().OnBlocoErro(this);
+        }
+    }
+
+    public void ResetPosition(bool apenasBloco)
+    {
+        transform.position = posicaoInicialCena;
+        foiColocado = false;
+        correta = false;
+        GetComponent<SpriteRenderer>().color = Color.white;
+
+        // Se apenas o bloco deve ser reposicionado, podemos adicionar aqui
+        if (!apenasBloco)
+        {
+            // Lógica adicional, se necessário
         }
     }
 }
