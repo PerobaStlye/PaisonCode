@@ -3749,6 +3749,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cf59249fb00f5244b94d2607be2e582e, type: 3}
+--- !u!1 &1028180238 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 518488667736519493, guid: 0ff27396cc2f733438c4fbb3053c0a40, type: 3}
+  m_PrefabInstance: {fileID: 474762444}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1035330297
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -112568,6 +112573,71 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!1001 &1650404292
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 246311427195357063, guid: 40c96f18422599c4aa5d368971f6ece5, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 21.215319
+      objectReference: {fileID: 0}
+    - target: {fileID: 246311427195357063, guid: 40c96f18422599c4aa5d368971f6ece5, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -16.38568
+      objectReference: {fileID: 0}
+    - target: {fileID: 246311427195357063, guid: 40c96f18422599c4aa5d368971f6ece5, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.24278674
+      objectReference: {fileID: 0}
+    - target: {fileID: 246311427195357063, guid: 40c96f18422599c4aa5d368971f6ece5, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 246311427195357063, guid: 40c96f18422599c4aa5d368971f6ece5, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 246311427195357063, guid: 40c96f18422599c4aa5d368971f6ece5, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 246311427195357063, guid: 40c96f18422599c4aa5d368971f6ece5, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 246311427195357063, guid: 40c96f18422599c4aa5d368971f6ece5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 246311427195357063, guid: 40c96f18422599c4aa5d368971f6ece5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 246311427195357063, guid: 40c96f18422599c4aa5d368971f6ece5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1429958634599326717, guid: 40c96f18422599c4aa5d368971f6ece5, type: 3}
+      propertyPath: m_Name
+      value: TrilhaSonora
+      objectReference: {fileID: 0}
+    - target: {fileID: 8092148682994911205, guid: 40c96f18422599c4aa5d368971f6ece5, type: 3}
+      propertyPath: m_Volume
+      value: 0.07
+      objectReference: {fileID: 0}
+    - target: {fileID: 8092148682994911205, guid: 40c96f18422599c4aa5d368971f6ece5, type: 3}
+      propertyPath: m_audioClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 1f5d5e7792d18ab45b8f41253dc5c2ff, type: 3}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 40c96f18422599c4aa5d368971f6ece5, type: 3}
 --- !u!1001 &1652885399
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -124235,6 +124305,10 @@ PrefabInstance:
       value: correta3
       objectReference: {fileID: 0}
     - target: {fileID: -4171033018960350147, guid: f7c8185263da7874fa90411608dfea1c, type: 3}
+      propertyPath: ativarEsseObjeto
+      value: 
+      objectReference: {fileID: 1028180238}
+    - target: {fileID: -4171033018960350147, guid: f7c8185263da7874fa90411608dfea1c, type: 3}
       propertyPath: desativarEsseObjeto
       value: 
       objectReference: {fileID: 649775777}
@@ -124849,9 +124923,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Agora chegamos em algo que pode se repetir infinamente, o laco de repticao.\nlaco
-    de repticao.\nlaco de repticao.\nlaco de repticao.\nlaco de repticao.\nlaco de
-    repticao.\nlaco de repticao.\nlaco de repticao.\n    laco de repticao......"
+  m_text: "Agora chegamos em algo que pode se repetir infinamente, o laco de repeticao.\nlaco
+    de repeticao.\nlaco de repeticao.\nlaco de repeticao.\nlaco de repeticao.\nlaco
+    de repeticao.\nlaco de repeticao.\nlaco de repeticao.\n    laco de repeticao......"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 641e411352abd6442bdf05307a756655, type: 2}
   m_sharedMaterial: {fileID: -6274862568093803724, guid: 641e411352abd6442bdf05307a756655, type: 2}
@@ -125472,6 +125546,7 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 1650404292}
   - {fileID: 1965237341}
   - {fileID: 1283473113}
   - {fileID: 212287547}

@@ -5905,7 +5905,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -4171033018960350147, guid: f7c8185263da7874fa90411608dfea1c, type: 3}
       propertyPath: tagCorreta
-      value: correta2
+      value: Correta
       objectReference: {fileID: 0}
     - target: {fileID: -4171033018960350147, guid: f7c8185263da7874fa90411608dfea1c, type: 3}
       propertyPath: desativarEsseObjeto
@@ -114819,11 +114819,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 362803250004702891, guid: 24aa67cdb30959b4c9508beaa002ee0d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 35.02
+      value: -29.86
       objectReference: {fileID: 0}
     - target: {fileID: 362803250004702891, guid: 24aa67cdb30959b4c9508beaa002ee0d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.86
+      value: 0.09
       objectReference: {fileID: 0}
     - target: {fileID: 362803250004702891, guid: 24aa67cdb30959b4c9508beaa002ee0d, type: 3}
       propertyPath: m_LocalPosition.z
@@ -115500,7 +115500,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 18.38836, y: 10.776785}
+  m_Offset: {x: 18.38836, y: 9.652603}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -115511,7 +115511,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 116.82829, y: 2.9696474}
+  m_Size: {x: 116.82829, y: 0.7212839}
   m_EdgeRadius: 0
 --- !u!61 &1147865062
 BoxCollider2D:
@@ -116670,7 +116670,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8132213911490947560, guid: cf59249fb00f5244b94d2607be2e582e, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.7562952
+      value: 2.071509
       objectReference: {fileID: 0}
     - target: {fileID: 8132213911490947560, guid: cf59249fb00f5244b94d2607be2e582e, type: 3}
       propertyPath: m_LocalScale.y
@@ -116678,11 +116678,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8132213911490947560, guid: cf59249fb00f5244b94d2607be2e582e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 74.095
+      value: 74.143
       objectReference: {fileID: 0}
     - target: {fileID: 8132213911490947560, guid: cf59249fb00f5244b94d2607be2e582e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -23.3359
+      value: -23.35
       objectReference: {fileID: 0}
     - target: {fileID: 8132213911490947560, guid: cf59249fb00f5244b94d2607be2e582e, type: 3}
       propertyPath: m_LocalPosition.z
@@ -118248,7 +118248,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8132213911490947560, guid: cf59249fb00f5244b94d2607be2e582e, type: 3}
       propertyPath: m_LocalScale.x
-      value: 2.3587856
+      value: 2.0812488
       objectReference: {fileID: 0}
     - target: {fileID: 8132213911490947560, guid: cf59249fb00f5244b94d2607be2e582e, type: 3}
       propertyPath: m_LocalScale.y
@@ -118256,11 +118256,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8132213911490947560, guid: cf59249fb00f5244b94d2607be2e582e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 73.2319
+      value: 65.92
       objectReference: {fileID: 0}
     - target: {fileID: 8132213911490947560, guid: cf59249fb00f5244b94d2607be2e582e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -26.7216
+      value: -27.37
       objectReference: {fileID: 0}
     - target: {fileID: 8132213911490947560, guid: cf59249fb00f5244b94d2607be2e582e, type: 3}
       propertyPath: m_LocalPosition.z
@@ -118441,7 +118441,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8132213911490947560, guid: cf59249fb00f5244b94d2607be2e582e, type: 3}
       propertyPath: m_LocalScale.x
-      value: 2.7809818
+      value: 2.0988438
       objectReference: {fileID: 0}
     - target: {fileID: 8132213911490947560, guid: cf59249fb00f5244b94d2607be2e582e, type: 3}
       propertyPath: m_LocalScale.y
@@ -118449,11 +118449,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8132213911490947560, guid: cf59249fb00f5244b94d2607be2e582e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 65.1631
+      value: 70.02
       objectReference: {fileID: 0}
     - target: {fileID: 8132213911490947560, guid: cf59249fb00f5244b94d2607be2e582e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -26.0696
+      value: -26.04
       objectReference: {fileID: 0}
     - target: {fileID: 8132213911490947560, guid: cf59249fb00f5244b94d2607be2e582e, type: 3}
       propertyPath: m_LocalPosition.z
@@ -119209,11 +119209,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1795586527153062529, guid: f7c8185263da7874fa90411608dfea1c, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -513
+      value: -512.92
       objectReference: {fileID: 0}
     - target: {fileID: 1795586527153062529, guid: f7c8185263da7874fa90411608dfea1c, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -270.51
+      value: -267.43
       objectReference: {fileID: 0}
     - target: {fileID: 1795586527153062529, guid: f7c8185263da7874fa90411608dfea1c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -119650,7 +119650,7 @@ PrefabInstance:
     - target: {fileID: -4171033018960350147, guid: f7c8185263da7874fa90411608dfea1c, type: 3}
       propertyPath: desativarEsseObjeto
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 332534227}
     - target: {fileID: 1795586527153062529, guid: f7c8185263da7874fa90411608dfea1c, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -119815,10 +119815,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_text: 'O mago encontra um bloqueio no caminho: uma pilha de pedras. Ele pergunta
-    ao aventureiro quantas pedras ha, e o aventureiro responde com um numero (int).
-    O mago usa o feitico (string) para tentar remover as pedras. Se o numero de pedras
-    for maior que (float), o mago usa o feitico, que sera bem-sucedido se (bool)
-    for verdadeiro. Caso contrario, ele decide esperar.'
+    ao aventureiro quantas pedras ha, e o aventureiro responde com um numero (tipo).
+    O mago usa o feitico de texto (tipo) para tentar remover as pedras. Se o numero
+    quebrado de pedras for maior que (tipo), o mago usa o feitico, que sera bem-sucedido
+    se (tipo) for verdadeiro. Caso contrario, ele decide esperar.'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 641e411352abd6442bdf05307a756655, type: 2}
   m_sharedMaterial: {fileID: -6274862568093803724, guid: 641e411352abd6442bdf05307a756655, type: 2}
@@ -120409,7 +120409,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8132213911490947560, guid: cf59249fb00f5244b94d2607be2e582e, type: 3}
       propertyPath: m_LocalScale.x
-      value: 2.9188197
+      value: 2.1648974
       objectReference: {fileID: 0}
     - target: {fileID: 8132213911490947560, guid: cf59249fb00f5244b94d2607be2e582e, type: 3}
       propertyPath: m_LocalScale.y
@@ -120417,11 +120417,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8132213911490947560, guid: cf59249fb00f5244b94d2607be2e582e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 72.3428
+      value: 75.11
       objectReference: {fileID: 0}
     - target: {fileID: 8132213911490947560, guid: cf59249fb00f5244b94d2607be2e582e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -24.0446
+      value: -24.03
       objectReference: {fileID: 0}
     - target: {fileID: 8132213911490947560, guid: cf59249fb00f5244b94d2607be2e582e, type: 3}
       propertyPath: m_LocalPosition.z
@@ -120468,6 +120468,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1393239199}
     m_Modifications:
+    - target: {fileID: -4171033018960350147, guid: f7c8185263da7874fa90411608dfea1c, type: 3}
+      propertyPath: tagCorreta
+      value: correta2
+      objectReference: {fileID: 0}
     - target: {fileID: -4171033018960350147, guid: f7c8185263da7874fa90411608dfea1c, type: 3}
       propertyPath: desativarEsseObjeto
       value: 

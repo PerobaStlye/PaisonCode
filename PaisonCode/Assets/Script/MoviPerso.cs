@@ -30,9 +30,11 @@ public class MovimentoPersonagem : MonoBehaviour
     public GameObject particlePrefab; // Prefab de partículas
     public GameObject objetoParticulaPos;
     private float tempoAndar;
+    Collider2D col;
 
     void Start()
     {
+        col = GetComponent<Collider2D>();
         anim = GetComponent<Animator>();
         if (objetoParticulaPos == null)
         {
@@ -228,20 +230,16 @@ public class MovimentoPersonagem : MonoBehaviour
     private IEnumerator HandleDeath()
     {
         float shrinkDuration = 1.0f;
-        float waitTime = 1.0f;
+        float waitTime = 0.2f;
         float elapsedTime = 0f;
 
         Vector3 originalScale = transform.localScale;
         Vector3 shrunkScale = originalScale * 0.5f;
 
-        // Encolhe e gira o personagem
+        // Encolhe o personagem
         while (elapsedTime < shrinkDuration)
         {
             transform.localScale = Vector3.Lerp(originalScale, shrunkScale, elapsedTime / shrinkDuration);
-
-            // Adiciona rotação ao longo do eixo Z
-            transform.Rotate(0, 0, 360 * (Time.deltaTime / shrinkDuration));
-
             elapsedTime += Time.deltaTime;
             yield return null;
         }
@@ -260,22 +258,15 @@ public class MovimentoPersonagem : MonoBehaviour
 
         elapsedTime = 0f;
 
-        // Retorna ao tamanho original e gira novamente
+        // Retorna ao tamanho original
         while (elapsedTime < shrinkDuration)
         {
             transform.localScale = Vector3.Lerp(shrunkScale, originalScale, elapsedTime / shrinkDuration);
-
-            // Adiciona rotação ao longo do eixo Z
-            transform.Rotate(0, 0, 360 * (Time.deltaTime / shrinkDuration));
-
             elapsedTime += Time.deltaTime;
             yield return null;
         }
 
         transform.localScale = originalScale;
-
-        // Reseta a rotação para o original caso necessário
-        transform.rotation = Quaternion.identity;
 
         // Permite o movimento novamente
         isDead = false;
