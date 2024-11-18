@@ -8,7 +8,7 @@ public class Moeda : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            // Adiciona moedas ao GameManager
+            SoundManager.Instance.TocarSomDeMoeda();
             GameManager.Instance.AddMoedas(valorMoeda);
 
             // Destroi a moeda após ser coletada

@@ -4,7 +4,7 @@ public class SoundManager : MonoBehaviour
 {
     public static SoundManager Instance;
     public AudioSource audioSource;
-    public AudioClip clipEmpurrar, clipMoeda, clipMorte;
+    public AudioClip clipEmpurrar, clipMoeda, clipMorte, caminhada;
 
     private void Start()
     {
@@ -46,5 +46,10 @@ public class SoundManager : MonoBehaviour
     public void TocarSomDeMorte()
     {
         GameManager.Instance.PlaySound(clipMorte);
+    }
+
+    public void TocarSomAndar()
+    {
+        GameManager.Instance.PlaySound(caminhada);
     }
 }

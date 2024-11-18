@@ -53,6 +53,7 @@ MonoBehaviour:
   moedasColetadas: 0
   outrosItens: 0
   jogadorEstaSubindo: 0
+  intervaloPedras: 5
 --- !u!114 &7302294593326449296
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65,7 +66,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3275eb8b31973844583042b934270e4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioSource: {fileID: 0}
+  audioSource: {fileID: 2962233860524848678}
   clipEmpurrar: {fileID: 8300000, guid: 0d9a8b36847df074eb4ef7dc67b88dc8, type: 3}
   clipMoeda: {fileID: 0}
   clipMorte: {fileID: 0}
@@ -81,9 +82,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aeea3e57752f486448faf27891e0a1b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  screenPrefabs:
-  - {fileID: 4042736655706357572, guid: 6c3a7c09ac289d64cb9f2eefac3aaf22, type: 3}
-  - {fileID: 2957333820724787717, guid: b6a6c983736412f449ce07e0269c4a4b, type: 3}
+  screenPrefabs: []
 --- !u!114 &4578966993278252929
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -96,7 +95,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e913ba5d2b83b954692f1537c4ac18b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  particlePrefab: {fileID: 0}
+  rockPrefab: {fileID: 4640268615442317883, guid: ef96b7d851aa8d94899a5c0288c9e6af, type: 3}
+  spawnPoint: {fileID: 0}
+  spawnPoint2: {fileID: 0}
 --- !u!82 &2962233860524848678
 AudioSource:
   m_ObjectHideFlags: 0
@@ -108,7 +109,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0

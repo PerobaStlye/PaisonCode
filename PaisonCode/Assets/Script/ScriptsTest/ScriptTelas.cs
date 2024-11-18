@@ -1,4 +1,4 @@
-using UnityEngine;
+/*using UnityEngine;
 
 public class ScriptTelas : MonoBehaviour
 {
@@ -46,7 +46,7 @@ public class ScriptTelas : MonoBehaviour
         if (pontuacaoAdd == 3)
         {
             pontuacaoAdd = 0;
-            GameManager.Instance.ChangeScreen($"Puzzle{proxTela}");
+            GameManager.Instance.ChangeScreen($"Puzzle{proxTela}"); //importante
         }
     }
 
@@ -83,4 +83,4 @@ public class ScriptTelas : MonoBehaviour
 
         Debug.Log("Puzzle resetado!");
     }
-}
+}*/

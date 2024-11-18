@@ -7,6 +7,7 @@ public class ParticleManager : MonoBehaviour
     public static ParticleManager Instance;
     public GameObject rockPrefab; // Prefab da pedra
     public GameObject spawnPoint; // Ponto de spawn das pedras
+    public GameObject spawnPoint2;
     private float rockSpawnInterval;
 
     private void Awake()
@@ -55,6 +56,8 @@ public class ParticleManager : MonoBehaviour
             // Spawna a pedra na posição centralizada do ponto de spawn
             Vector2 spawnPosition = spawnPoint.transform.position;
             Instantiate(rockPrefab, spawnPosition, Quaternion.identity);
+            Vector2 spawnPosition2 = spawnPoint2.transform.position;
+            Instantiate(rockPrefab, spawnPosition2, Quaternion.identity);
         }
     }
 }

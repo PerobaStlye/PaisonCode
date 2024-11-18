@@ -4,6 +4,7 @@ public class Pedra : MonoBehaviour
 {
     public float velocidadeQueda = 2.0f; // Velocidade com que a pedra cai
     public float tempoPedra;
+    public float tempomaximo;
 
     private void Start()
     {
@@ -17,7 +18,7 @@ public class Pedra : MonoBehaviour
         transform.Translate(Vector2.down * velocidadeQueda * Time.deltaTime);
 
         // Verifica se a pedra saiu da tela e a destrói se necessário
-        if (tempoPedra > 6)
+        if (tempoPedra > tempomaximo)
         {
             tempoPedra = 0;
             Destroy(gameObject);

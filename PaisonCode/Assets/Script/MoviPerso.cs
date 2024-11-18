@@ -12,7 +12,7 @@ public class MovimentoPersonagem : MonoBehaviour
 
     private bool isPushing = false;
     public float pushCooldown = 1.0f;
-    private float lastPushTime = 0f;
+    private float lastPushTime = 0.1f;
     public LayerMask pushableLayerMask;
     public LayerMask climbableLayerMask;
 
@@ -26,15 +26,17 @@ public class MovimentoPersonagem : MonoBehaviour
     public float intervaloTela;
 
     public AudioClip pushSoundClip; // Clip de som para empurrar
+    public AudioClip deathSoundClip; // Clip de som para a morte
     public GameObject particlePrefab; // Prefab de partículas
     public GameObject objetoParticulaPos;
+    private float tempoAndar;
 
     void Start()
     {
         anim = GetComponent<Animator>();
         if (objetoParticulaPos == null)
         {
-            Debug.LogError("Não colocaram instacia para a particula nascer");
+            Debug.LogError("Não colocaram instância para a partícula nascer");
         }
     }
 
@@ -56,28 +58,9 @@ public class MovimentoPersonagem : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.J) && !isClimbing)
         {
-            if (Physics2D.OverlapCircle(transform.position, 1f, climbableLayerMask) == null && telaAtivada == false)
-            {
-                // Altere o nome da tela para o nome do prefab que deseja ativar
-                GameManager.Instance.ChangeScreen("Canvas");
-                telaAtivada = true;
-                
-            }
-            if (intervaloTela >= 2f)
-            {
-                GameManager.Instance.DeactivateScreen("Canvas");
-                telaAtivada = false;
-                intervaloTela = 0;
-            }
-            else
-            {
-                TryClimbObject();
-            }
+            TryClimbObject();
         }
-        if (telaAtivada == true)
-        {
-            intervaloTela = intervaloTela + Time.deltaTime;
-        }
+        tempoAndar = tempoAndar + Time.deltaTime;
     }
 
     void HandleMovement()
@@ -97,6 +80,15 @@ public class MovimentoPersonagem : MonoBehaviour
         anim.SetBool("EmMovimento", horizontalInput != 0 || verticalInput != 0);
         anim.SetBool("EmMovimentoX", horizontalInput != 0);
         anim.SetBool("EmMovimentoY", verticalInput != 0);
+
+        if (andando == true && tempoAndar >= 0.5f)
+        {
+            SoundManager.Instance.TocarSomAndar();
+            tempoAndar = 0f;
+        }
+
+
+
 
         if (velocidade > 0)
         {
@@ -184,7 +176,6 @@ public class MovimentoPersonagem : MonoBehaviour
 
                         // Toca o som de empurrar
                         SoundManager.Instance.TocarSomDeEmpurrar();
-                        Debug.LogError("Empurrando");
                     }
                 }
             }
@@ -194,7 +185,6 @@ public class MovimentoPersonagem : MonoBehaviour
             Debug.Log("Raycast did not hit anything.");
         }
     }
-
 
     bool CanMoveObject(GameObject obj, Vector2 direction)
     {
@@ -208,7 +198,15 @@ public class MovimentoPersonagem : MonoBehaviour
             return false;
         }
 
-        return !Physics2D.OverlapBox(newPosition, collider.bounds.size, 0f, LayerMask.GetMask("Default"));
+        return !Physics2D.OverlapBox(
+            newPosition,
+            collider.bounds.size,
+            0f,
+            ~((1 << LayerMask.NameToLayer("player")) |
+              (1 << LayerMask.NameToLayer("objeto movido")) |
+              (1 << LayerMask.NameToLayer("UI")) |
+              (1 << LayerMask.NameToLayer("Empurravel")))
+        );
     }
 
     IEnumerator PushObject(GameObject obj, Vector2 targetPosition)
@@ -227,6 +225,87 @@ public class MovimentoPersonagem : MonoBehaviour
         isPushing = false;
     }
 
+    private IEnumerator HandleDeath()
+    {
+        float shrinkDuration = 1.0f;
+        float waitTime = 1.0f;
+        float elapsedTime = 0f;
+
+        Vector3 originalScale = transform.localScale;
+        Vector3 shrunkScale = originalScale * 0.5f;
+
+        // Encolhe e gira o personagem
+        while (elapsedTime < shrinkDuration)
+        {
+            transform.localScale = Vector3.Lerp(originalScale, shrunkScale, elapsedTime / shrinkDuration);
+
+            // Adiciona rotação ao longo do eixo Z
+            transform.Rotate(0, 0, 360 * (Time.deltaTime / shrinkDuration));
+
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.localScale = shrunkScale;
+
+        // Pausa enquanto morto
+        yield return new WaitForSecondsRealtime(waitTime);
+
+        // Reseta a posição para o último ponto antes da morte
+        if (lastAntesDaMortePosition != Vector2.zero)
+        {
+            transform.position = lastAntesDaMortePosition;
+            lastAntesDaMortePosition = Vector2.zero;
+        }
+
+        elapsedTime = 0f;
+
+        // Retorna ao tamanho original e gira novamente
+        while (elapsedTime < shrinkDuration)
+        {
+            transform.localScale = Vector3.Lerp(shrunkScale, originalScale, elapsedTime / shrinkDuration);
+
+            // Adiciona rotação ao longo do eixo Z
+            transform.Rotate(0, 0, 360 * (Time.deltaTime / shrinkDuration));
+
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.localScale = originalScale;
+
+        // Reseta a rotação para o original caso necessário
+        transform.rotation = Quaternion.identity;
+
+        // Permite o movimento novamente
+        isDead = false;
+        velocidade = 2.5f;
+    }
+
+
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Queda"))
+        {
+            isDead = true;
+            velocidade = 0;
+
+            SoundManager.Instance.TocarSomDeMorte();
+
+            if (particlePrefab != null)
+            {
+                GameManager.Instance.TriggerParticles(objetoParticulaPos.transform.position, particlePrefab);
+            }
+
+            StartCoroutine(HandleDeath());
+        }
+        else if (other.CompareTag("AntesDaMorte"))
+        {
+            lastAntesDaMortePosition = other.transform.position;
+        }
+    }
+
     void TryClimbObject()
     {
         Vector2 origin = transform.position;
@@ -237,7 +316,6 @@ public class MovimentoPersonagem : MonoBehaviour
             ClimbObject(hit.gameObject);
         }
     }
-
     void ClimbObject(GameObject climbable)
     {
         isClimbing = true;
@@ -265,46 +343,10 @@ public class MovimentoPersonagem : MonoBehaviour
             Vector2 descendPosition = posicaoInicial;
             transform.position = new Vector2(descendPosition.x, localDeSubida.position.y - alturaSubida);
             GetComponent<Rigidbody2D>().isKinematic = false;
-            velocidade = 2.0f;
+            velocidade = 2.5f;
             localDeSubida = null;
         }
     }
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.CompareTag("Queda"))
-        {
-            isDead = true;
-            velocidade = 0;
-
-            // Aciona o evento para criar partículas
-            if (particlePrefab != null)
-            {
-                GameManager.Instance.TriggerParticles(objetoParticulaPos.transform.position, particlePrefab);
-            }
-
-            StartCoroutine(ReturnToLastAntesDaMortePosition());
-        }
-        else if (other.CompareTag("AntesDaMorte"))
-        {
-            lastAntesDaMortePosition = other.transform.position;
-        }
-    }
-
-    private IEnumerator ReturnToLastAntesDaMortePosition()
-    {
-        yield return new WaitForSecondsRealtime(3);
-
-        if (lastAntesDaMortePosition != Vector2.zero)
-        {
-            transform.position = lastAntesDaMortePosition;
-            lastAntesDaMortePosition = Vector2.zero; // Limpa a posição após o retorno
-        }
-
-        isDead = false; // Permite o movimento novamente
-        velocidade = 2;
-    }
-
     void MoveCharacter(Vector2 direction)
     {
         Vector2 movement = direction * velocidade * Time.deltaTime;

@@ -33,7 +33,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -3.48, y: -1.04, z: 0}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -102,7 +102,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 091d62d58c213cd4e85202a509b66b80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  velocidade: 2
+  velocidade: 2.5
   alturaSubida: 1
   andandoX: 0
   andandoY: 0
@@ -117,6 +117,7 @@ MonoBehaviour:
   isDead: 0
   intervaloTela: 0
   pushSoundClip: {fileID: 8300000, guid: 0d9a8b36847df074eb4ef7dc67b88dc8, type: 3}
+  deathSoundClip: {fileID: 0}
   particlePrefab: {fileID: 6400399549019697523, guid: c173e7eeb6ff32e4c880a069b6f00e46, type: 3}
   objetoParticulaPos: {fileID: 6734739682596242278}
 --- !u!61 &6393007912358161359
@@ -151,7 +152,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.005228162, y: 0.07986742}
+  m_Offset: {x: -0.0072011948, y: -0.014029801}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -162,7 +163,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 1
   serializedVersion: 2
-  m_Size: {x: 0.9054711, y: 0.9325172}
+  m_Size: {x: 0.7989216, y: 0.7447227}
   m_EdgeRadius: 0
 --- !u!95 &143089493536269820
 Animator:
