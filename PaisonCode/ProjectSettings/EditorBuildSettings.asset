@@ -14,7 +14,16 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/Papas.unity
     guid: d48a6fd86e88d9441b376f44aa39a6ef
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Modulo1.unity
     guid: bedf4324933f00444a3a057a7a5bfd07
+  - enabled: 0
+    path: Assets/Scenes/Modulo2.unity
+    guid: 7f406279cb3ad3744ad898df4f4665f4
+  - enabled: 0
+    path: Assets/Scenes/Modulo3.unity
+    guid: 961ef30cb9bff5c44ac5d44ed471cb52
+  - enabled: 1
+    path: Assets/Scenes/Modulo4.unity
+    guid: 5725208688566364d88eb00aea00c572
   m_configObjects: {}
